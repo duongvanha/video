@@ -19,6 +19,8 @@
 
     import item  from './components/item';
     import store from './store';
+    import queryString from 'query-string';
+
 
     require('plyr');
 
@@ -27,32 +29,40 @@
         name        : 'app',
         components  : {item},
         data() {
-            return {treeData: {}}
+            return {
+                treeData: {},
+                subPath : queryString.parse(location.search).sub || '-subtitle-en.srt'
+            }
         },
         computed    : {
-            linkMovie    : function () {
+            linkMovie() {
                 this.$nextTick(function () {
+                    // eslint-disable-next-line
                     this.$refs.player.player.language = 'en';
+                    // eslint-disable-next-line
                     this.$refs.player.player.toggleCaptions(true);
                 });
                 return `http://localhost:3000/file?path=${this.movieSelected.path}`
             },
-            movieSelected: function () {
+            movieSelected() {
                 this.$nextTick(function () {
                     if (this.$refs.player) {
-                        console.log(this.$refs.player.player.restart());
+                        this.$refs.player.player.restart();
                     }
                 });
                 return store.getters.movieSelected
             },
-            sub          : function () {
-                const path = store.state.movieSelected.path.match(/(.*)\..*$/)[1] + '-en.srt';
+            sub() {
+                const path = store.state.movieSelected.path.match(/(.*)\..*$/)[1] + this.subPath;
                 return `http://localhost:3000/file?path=${path}`
             },
         },
-        beforeCreate: function () {
+        beforeCreate () {
             fetch('http://localhost:3000/api').then(response => response.json()).then(response => this.treeData = response);
         },
+        mounted() {
+            
+        }
     }
 
 </script>
