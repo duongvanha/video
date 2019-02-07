@@ -61,7 +61,7 @@
             fetch('http://localhost:3000/api').then(response => response.json()).then(response => this.treeData = response);
         },
         mounted() {
-            
+
         }
     }
 
@@ -85,5 +85,9 @@
         padding-left: 1em;
         line-height: 1.5em;
         list-style-type: dot;
+    }
+
+    .selected {
+        color: #12de12
     }
 </style>

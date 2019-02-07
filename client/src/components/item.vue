@@ -1,5 +1,5 @@
 <template>
-    <li>
+    <li :class="{selected: isRunningVideo}">
         <div :class="{bold: isFolder}"
              @click="toggle">
             {{ model.name }}
@@ -23,7 +23,7 @@
         name    : 'item',
         props   : {
             model: Object,
-            path : '',
+            path : ''
         },
         data    : function () {
             return {
@@ -35,6 +35,9 @@
             isFolder: function () {
                 return this.model.children &&
                     this.model.children.length
+            },
+            isRunningVideo() {
+                return this.store.getters.movieSelected === this.model
             },
         },
         methods : {
