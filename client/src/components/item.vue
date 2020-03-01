@@ -7,9 +7,10 @@
         </div>
         <ul v-show="open" v-if="isFolder">
             <item class="item"
-                  v-for="(model, index) in model.children"
+                  v-for="(m, index) in model.children"
                   :key="index"
-                  :model="model">
+                  :list="model.children"
+                  :model="m">
             </item>
         </ul>
     </li>
@@ -23,32 +24,31 @@
         name    : 'item',
         props   : {
             model: Object,
+            list : Array,
             path : ''
         },
-        data    : function () {
-            return {
-                open: false,
-                store,
-            }
+        data() {
+            return { open: false }
         },
         computed: {
-            isFolder: function () {
+            isFolder() {
                 return this.model.children &&
                     this.model.children.length
             },
             isRunningVideo() {
-                return this.store.getters.movieSelected === this.model
+                return store.getters.movieSelected === this.model
             },
         },
         methods : {
-            toggle: function () {
+            toggle() {
                 if (this.isFolder) {
                     this.open = !this.open
                 } else {
-                    store.commit('selectMovie', null);
-                    setTimeout(() => {
+                    store.commit('selectMovie', null)
+                    this.$nextTick(() => {
                         store.commit('selectMovie', this.model)
-                    }, 0)
+                    })
+                    store.commit('setListMovie', this.list)
                 }
             },
         },
